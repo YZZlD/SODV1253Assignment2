@@ -26,3 +26,17 @@
     color: #5c3d2e;
     letter-spacing: 1px;
 }
+
+summary {
+    list-style: none;
+}
+
+li{
+    text-align: start;
+    color: black;
+}
+
+h3{
+    font-weight: bolder;
+    color: black
+}
