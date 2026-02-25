@@ -4,11 +4,18 @@ import data from './data/data.json';
 import detailedData from'./data/detailedData.json'
 import RecipeCard from './components/RecipeCard';
 
+//Below the App is implementation for an API with unlimited calls. I would change from showing details on demand to showing all details by doing a call for each
+//recipe by id and getting and displaying the detailed information. Below is also the implementation for filtering the results by diet, by using a filtering
+//callback function referencing against the diets key-value pair in the detailed information json. Then setting the filtered array to the recipe details in state.
+
 function App() {
   //State for recipes and diet.
   const [recipes, setRecipes] = useState([]);
   const [diet, setDiet] = useState("");
+
   const[recipeDetails, addRecipeDetails] = useState({});
+
+
 
   //Fetch from the spoonacular API with the ingredients list and dietary restrictions then set the recipes in state.
   async function FetchRecipes() {
@@ -65,7 +72,6 @@ function App() {
         {/* Dynamically generate a grid of recipes returned from the API for a given query string. */}
         <div className='gridContainer'>
           {recipes.map((recipe) => {
-            console.log(recipe.id);
             if(recipeDetails[recipe.id]) return <RecipeCard key={recipeDetails[recipe.id].id} recipeId={recipeDetails[recipe.id].id} title={recipeDetails[recipe.id].title} image={recipeDetails[recipe.id].image} readyInMinutes={recipeDetails[recipe.id].readyInMinutes} instructions={recipeDetails[recipe.id].analyzedInstructions} ingredients={recipeDetails[recipe.id].extendedIngredients} fetchRecipeDetails={FetchRecipeDetails}></RecipeCard>;
             else return <RecipeCard key={recipe.id} recipeId={recipe.id} title={recipe.title} image={recipe.image} ingredients={[]} instructions={[]} fetchRecipeDetails={FetchRecipeDetails}></RecipeCard>;
           })}
@@ -76,3 +82,46 @@ function App() {
 }
 
 export default App
+
+
+//This would be my implementation for diet filtering in the program if I had an array of detailed recipe information from the API at any time.
+  //Diet would be changed to an array that could hold an unlimited amount of diets to filter with.
+  //Recipe details would simply become an array that would be iterated over to display all detailed recipe information in cards.
+
+  // const [diet, setDiet] = useState([]);
+  // const [recipeDetails, addRecipeDetails] = useState([]);
+
+  //Would swap from the on demand calls to a call for all recipes detailed information and push it to the recipe details array to loop over for
+  //recipe cards. Recipe details would be reset every time a
+
+  // const FetchRecipeDetails = async (id) => {
+  //   addRecipeDetails([]);
+  //   recipes.forEach(async (recipe) =>
+  //   {
+  //     const queryString = `https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${import.meta.env.VITE_API_KEY}`;
+  //     const response = await fetch(queryString);
+  //     const detailedRecipe = await response.json();
+  //     addRecipeDetails([...recipeDetails, detailedRecipe]);
+  //   });
+  // }
+
+  //This function would serve as the filtering function to check all user specified diets are present in the diet of the recipe.
+
+  // function checkDiets(diets) {
+  //   for(let i = 0; i < diet.length; i++)
+  //   {
+  //     if(!diets.includes(diet[i])) return false;
+  //   }
+  //   return true;
+  // }
+
+  //This would filter recipes down to only recipes with the desired dietary restrictions.
+
+  // function dietFilter() {
+  //   const dietFilteredRecipes = recipeDetails.filter((recipe) => checkDiets(recipe.diets));
+  //   addRecipeDetails([dietFilteredRecipes]);
+  // }
+
+  //Another note is the selection for the diet would change to allow for multiple selections instead of only a single diet
+  //at a time. This could either be in the form of a dropdown that would add the diet to state and then render a button above
+  //or below the searchbar that both shows all of the selected diets and would allow for removing of the diets.
